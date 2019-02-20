@@ -27,21 +27,25 @@ class MonitoringJob extends BaseObject implements RetryableJobInterface
         try {
             // Получаем все текущие игровые события
             $inplayEvents = $this->GetInplayEvents();
+
             // Проходимся по всем текущим игровым событиям
             foreach ($inplayEvents as $event) {
                 // Проверка на корректность полученных данных
                 if (is_null($event->points)) continue;
+
                 // Ищим последние добавленные очки по данному игровому событию
-                $pointModel = Point::find()->where(['event_id' => $event->id])->orderBy(['id' => SORT_DESC])->one();
+                $pointModel = Point::find()->where(['event_id' => $event->id])->orderBy(['id' => SORT_DESC])->all();
+
                 // Если полученные очки не совподают с уже добавленными очками,
                 // произвести добавление
-
-//                echo $pointModel->value . ' : ' . $event->points . ' : ' . ($pointModel->value !== $event->points) . chr(0x0D) . chr(0x0A);
-
-                if ($pointModel->value !== $event->points) {
+                if ($pointModel[0]->value !== $event->points
+                    && $pointModel[1]->value !== $event->points) {
                     // Если первый подающий еще неизвестен, производим вычисления
                     if (is_null($serveModel = Serve::findOne($event->id))) {
+
+                        // Получаем дополнительную информацию
                         $eventInfo = $this->GetEventInfo($event->id);
+
                         // Определяем первого подающего
                         if (!is_null($eventInfo->events[0]->text)) {
                             $resultFirstGame = explode(' - ', $eventInfo->events[0]->text);
@@ -50,12 +54,11 @@ class MonitoringJob extends BaseObject implements RetryableJobInterface
 
                             $serveModel = new Serve();
                             $serveModel->id = $event->id;
-                            $serveModel->name = ($status == 'holds') ? $playerName : ($event->home->name == $playerName) ? $event->away->name : $event->home->name;
+                            $serveModel->name = ($status == 'holds') ? $playerName : (($event->home->name == $playerName) ? $event->away->name : $event->home->name);
                             $serveModel->save();
                         }
-
-
                     }
+
                     // Актуализируем данные о текущем колличестве очков
                     $pointModel = new Point();
                     $pointModel->event_id = $event->id;
@@ -69,94 +72,6 @@ class MonitoringJob extends BaseObject implements RetryableJobInterface
             // Создаем новую задачу
             \Yii::$app->queue->push(new MonitoringJob());
         }
-
-        //        // Проходимся по всем игровым событиям
-//        foreach ($inplayEvents as $event) {
-//            // Получаем дополнительную информацию о событии
-//            $eventInfo = $this->GetEventInfo($event->id);
-//
-//            // Создаем игроков в базе данных
-//
-//            // Проверяем на существование игрока
-//            if (is_null($firstPlayer = Player::findOne($event->home->id))) {
-//                $firstPlayer = new Player();
-//
-//                // Заполняем модель первого игра
-//                $firstPlayer->id = $event->home->id;
-//                $firstPlayer->name = $event->home->name;
-//            }
-//
-//            // Актуализируем статистику игрока
-//            $firstPlayer->aces = $eventInfo->stats->aces[0];
-//            $firstPlayer->double_faults = $eventInfo->stats->double_faults[0];
-//            $firstPlayer->win_1st_serve = $eventInfo->stats->win_1st_serve[0];
-//            $firstPlayer->break_point_conversions = $eventInfo->stats->break_point_conversions[0];
-//
-//            // Проверяем на существование игрока
-//            if (is_null($secondPlayer = Player::findOne($event->away->id))) {
-//                $secondPlayer = new Player();
-//
-//                // Заполняем модель второго игрока
-//                $secondPlayer->id = $event->away->id;
-//                $secondPlayer->name = $event->away->name;
-//            }
-//
-//            // Актуализируем статистику игрока
-//            $secondPlayer->aces = $eventInfo->stats->aces[1];
-//            $secondPlayer->double_faults = $eventInfo->stats->double_faults[1];
-//            $secondPlayer->win_1st_serve = $eventInfo->stats->win_1st_serve[1];
-//            $secondPlayer->break_point_conversions = $eventInfo->stats->break_point_conversions[1];
-//
-//            // Определяем первого подающего
-//            $resultFirstGame = explode(' - ', $eventInfo->events[0]->text);
-//            $playerName = $resultFirstGame[1];
-//            $status = explode(' ', $resultFirstGame[2])[0];
-//
-//            $firstServePlayer = ($status == 'holds') ? $playerName : ($firstPlayer->name == $playerName) ? $secondPlayer->name : $firstPlayer->name;
-//
-//            $sumScore = array_sum($this->multiexplode([',', '-'], $event->ss));
-//
-//            // Определяем подающего исходя из счета и резултатов первого гейма
-//            if ($sumScore % 2 == 0) {
-//                if ($firstPlayer->name == $firstServePlayer) {
-//                    $firstPlayer->serve = 1;
-//                    $secondPlayer->serve = 0;
-//                } else {
-//                    $firstPlayer->serve = 0;
-//                    $secondPlayer->serve = 1;
-//                }
-//            } else {
-//                if ($firstPlayer->name != $firstServePlayer) {
-//                    $firstPlayer->serve = 1;
-//                    $secondPlayer->serve = 0;
-//                } else {
-//                    $firstPlayer->serve = 0;
-//                    $secondPlayer->serve = 1;
-//                }
-//            }
-//
-//            // Сохраняем модели игроков
-//            $secondPlayer->save();
-//            $firstPlayer->save();
-//
-//            // Проверка на существование игрового события в базе данных
-//            if (is_null($eventModel = Event::findOne($event->id))) {
-//                // Заполняем модель события и сохраняем ее
-//                $eventModel = new Event();
-//
-//                $eventModel->id = $event->id;
-//                $eventModel->league = $event->league->name;
-//                $eventModel->first_player_id = $firstPlayer->id;
-//                $eventModel->second_player_id = $secondPlayer->id;
-//                $eventModel->score = $event->ss;
-//
-//                $eventModel->save();
-//            }
-//
-//            break;
-//        }
-//
-
     }
 
     /**

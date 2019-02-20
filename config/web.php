@@ -8,16 +8,19 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
         'log',
-        'queue',
+        'queue'
     ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm' => '@vendor/npm-asset',
+        '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '350401be75bbb0fafd3d912a1a1d5e54',
+            'cookieValidationKey' => 's7o0dBcTtkNY6zYXOGHy9p2XrA_gjFa-',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -60,8 +63,13 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller:(about|login)>' => 'site/index',
+                '<controller:(\w|-)+>/' => '<controller>/index',
+                '<controller:\w+>/<action:(\w|-)+>/<id:\d+>' => '<controller>/<action>',
+                '<module:\w+>/<controller:\w+>/<action:(\w|-)+>' => '<module>/<controller>/<action>',
+                '<controller:\w+>/<action:(\w|-)+>' => '<controller>/<action>'
             ],
-        ],
+        ]
     ],
     'modules' => [
         'gridview' => [

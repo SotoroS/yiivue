@@ -6,7 +6,7 @@ body {
 .wrap {
     min-height: 100%;
     height: auto;
-    margin: 0 auto -60px;
+    margin: 20px;
     padding: 0 0 60px;
 }
 
@@ -116,11 +116,11 @@ a.desc:after {
 
 .point-box {
     text-align: center;
-    width: 18px;
+    width: 20px;
 }
 
 .points-col {
-    width: 18px;
+    width: 20px;
     display: inline-block;
 }
 
@@ -128,9 +128,10 @@ a.desc:after {
     display: block;
     border-right: 1px solid #ddd;
     padding-right: 5px;
+    width: 300px;
 }
 
-.player-col {
+.inline {
     display: inline-block;
 }
 
@@ -178,4 +179,19 @@ a[data-toggle=collapse]:hover {
 
 .panel-group {
     margin-bottom: 0;
+}
+
+.panel-body, .panel-heading {
+    padding: 0 10px;
+    height: auto;
+}
+
+.light {
+    background-color: darkgreen !important;
+    transition: background-color .5s !important;
+}
+
+.panel-default,
+.panel-success{
+    transition: .5s;
 }

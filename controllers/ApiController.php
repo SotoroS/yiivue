@@ -3,29 +3,65 @@
 namespace app\controllers;
 
 use app\jobs\MonitoringJob;
+use app\models\LoginForm;
 use app\models\Point;
 use app\models\Queue;
 use app\models\Serve;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
 
-/**
- * Class SiteController
- * @package app\controllers
- */
-class SiteController extends Controller
+class ApiController extends Controller
 {
     /**
      * {@inheritdoc}
      */
-    public function actions()
+    public function behaviors()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'login' => ['post'],
+                ],
             ],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeAction($action)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return parent::beforeAction($action);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterAction($action, $result)
+    {
+        $result = parent::afterAction($action, $result);
+        $result['token'] = \Yii::$app->request->csrfToken;
+        return $result;
+    }
+
+    /**
+     * Login action.
+     *
+     * @return Response|string
+     */
+    public function actionLogin()
+    {
+        $model = new LoginForm();
+        $model->load(Yii::$app->request->post(), '');
+        if ($model->login()) {
+            return ['result' => 'success', 'user_id' => Yii::$app->user->getId()];
+        } else {
+            return ['result' => 'error', 'messages' => $model->getFirstErrors()];
+        }
     }
 
     /**
@@ -33,19 +69,26 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionEvent()
     {
-        return $this->render('index');
+        $request = Yii::$app->request;
+
+        $events = $this->GetInplayEvents($request->get('count'));
+
+        return ['result' => 'success', 'events' => $events, 'date' => date('H:i:s Y-m-d')];
     }
 
     /**
      * Получение информации о текущих игровых событиях
      * @return object
      */
-    private function GetInplayEvents()
+    private function GetInplayEvents($countRepeat = 2)
     {
         // Генерируем URL для получения информаци о текущих играх
-        $url = 'https://api.betsapi.com/v1/events/inplay?sport_id=' . \Yii::$app->params['sport_id'] . '&token=' . \Yii::$app->params['api_token'];
+        $url = 'https://api.betsapi.com/v1/events/inplay?sport_id='
+            . \Yii::$app->params['sport_id']
+            . '&token='
+            . \Yii::$app->params['api_token'];
 
         $ch = curl_init($url);
 
@@ -87,6 +130,35 @@ class SiteController extends Controller
                 $indexPointInGame++;
             }
 
+            $count = 0;
+
+            // Подсвесиваем повторение
+            for ($j = (($result[$i]->home->name == $firstServePlayerName) ? 3 : 2);
+                 $j < $indexGame + 1;
+                 $j += 2) {
+                // Отключаем изначально у всех подстветку
+                $result[$i]->games[$j]->select = false;
+
+                // Поиск последовательности
+                if (($result[$i]->home->name == $firstServePlayerName
+                        && ($result[$i]->games[$j]->points[1][0] == $result[$i]->games[$j - 2]->points[1][0])
+                        && ($result[$i]->games[$j]->points[1][0] == 15))
+                    || ($result[$i]->home->name == $firstServePlayerName
+                        && ($result[$i]->games[$j]->points[1][1] == $result[$i]->games[$j - 2]->points[1][1])
+                        && ($result[$i]->games[$j]->points[1][1] == 15))) {
+                    $count++;
+                } else {
+                    $count = 0;
+                }
+
+                // Выделяем последовательность
+                if ($count >= $countRepeat) {
+                    for ($k = $j; $k >= $j - ($countRepeat * 2); $k -= 2) {
+                        $result[$i]->games[$k]->select = true;
+                    }
+                }
+            }
+
             // Переворачиваем массив геймов
             if (count($result[$i]->games) > 0) {
                 $result[$i]->games = array_reverse($result[$i]->games);
@@ -98,7 +170,7 @@ class SiteController extends Controller
             }
 
             // Добавляем информацию о подающего
-            for ($j = $result[$i]->scores->sum, $index = 0; $j > $result[$i]->scores->sum - count($result[$i]->games); $j--) {
+            for ($j = $result[$i]->scores->sum, $index = 0; $index < count($result[$i]->games); $j--) {
                 $servePlayerName = ($j % 2 == 0) ? $firstServePlayerName : $secondServePlayerName;
                 $result[$i]->games[$index++]->serve = $servePlayerName;
             }
@@ -131,52 +203,6 @@ class SiteController extends Controller
 
         // Получем все текущие игры
         return $data;
-    }
-
-    public function actionJobTest() {
-        // Получаем все текущие игровые события
-        $inplayEvents = $this->GetInplayEvents();
-
-        // Проходимся по всем текущим игровым событиям
-        foreach ($inplayEvents as $event) {
-            // Проверка на корректность полученных данных
-            if (is_null($event->points)) continue;
-
-            // Ищим последние добавленные очки по данному игровому событию
-            $pointModel = Point::find()->where(['event_id' => $event->id])->orderBy(['id' => SORT_DESC])->one();
-
-            // Если полученные очки не совподают с уже добавленными очками,
-            // произвести добавление
-            if ($pointModel->value !== $event->points) {
-                // Если первый подающий еще неизвестен, производим вычисления
-//                if (is_null($serveModel = Serve::findOne($event->id))) {
-
-                    // Получаем дополнительную информацию
-                    $eventInfo = $this->GetEventInfo($event->id);
-
-                    // Определяем первого подающего
-                    if (!is_null($eventInfo->events[0]->text)) {
-                        $resultFirstGame = explode(' - ', $eventInfo->events[0]->text);
-                        $playerName = $resultFirstGame[1];
-                        $status = explode(' ', $resultFirstGame[2])[0];
-
-                        $serveModel = new Serve();
-                        $serveModel->id = $event->id;
-                        $serveModel->name = ($status == 'holds') ? $playerName : (($event->home->name == $playerName) ? $event->away->name : $event->home->name);
-                        echo '<pre>' . $eventInfo->events[0]->text . ' Serve: ' . $serveModel->name . '<br>'
-                            . ($status == 'holds')
-                            . '</pre>';
-                        //                        $serveModel->save();
-                    }
-//                }
-
-                // Актуализируем данные о текущем колличестве очков
-                $pointModel = new Point();
-                $pointModel->event_id = $event->id;
-                $pointModel->value = $event->points;
-//                $pointModel->save();
-            }
-        }
     }
 
     /**
@@ -250,4 +276,6 @@ class SiteController extends Controller
         // Получем все текущие игры
         return json_decode($data)->results[0];
     }
+
+
 }

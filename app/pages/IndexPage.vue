@@ -1,5 +1,7 @@
 <template>
     <div class="site-index">
+        <router-link to="/about">about</router-link>
+        <router-link to="/queue">queue</router-link>
         <div class="input-group">
             <span class="input-group-addon" id="input-count">Начальное количество элементов последовательности</span>
             <input v-model="count" type="number" class="form-control" placeholder="2" aria-describedby="input-count">

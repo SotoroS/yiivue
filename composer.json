@@ -20,7 +20,9 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "yiisoft/yii2-queue": "^2.1",
         "johnitvn/yii2-ajaxcrud": "*",
-        "yiisoft/yii2-debug": "^2.0"
+        "yiisoft/yii2-debug": "^2.0",
+        "yiicod/yii2-socketio": "^1.2",
+        "workerman/phpsocket.io": "^1.1"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "~2.0.0",

@@ -1,13 +1,18 @@
 import router from './routes.js'
+import VueSocketIO from 'vue-socket.io'
 
 require('bootstrap')
 require('./bootstrap')
 
-window.Vue = require('vue')
-window.$ = require('jquery')
-window.JQuery = require('jquery')
+var Vue = require('vue')
+var $ = require('jquery')
 
-window.app = new Vue({
+Vue.use(new VueSocketIO({
+    debug: true,
+    connection: 'http://localhost:1228',
+}))
+
+var app = new Vue({
     el: '#app',
     router,
     data: {
@@ -15,7 +20,7 @@ window.app = new Vue({
     },
     methods: {
         isActiveMenu(path) {
-            return window.location.pathname == path;
+            return window.location.pathname == path
         }
     }
 });

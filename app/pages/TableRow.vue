@@ -69,35 +69,43 @@
         props: ['event', 'audio'],
         data() {
             return {
+                // Количество элементов последовательности
                 count: 0,
+                open: false,
             }
         },
         updated: function () {
+            // Получаем количество элементов последовательности
             let count = parseInt($('#collapse-' + this.event.id + '>.panel-body.list-group-item-success').length)
+            // Ссылка на панель
             let panel = $(this.$refs.panel);
 
-            if (this.count < count) {
+            // Если количество элементов последовательности изменилось,
+            // то оповестить об этом
+            if (this.count != count) {
+                // Проигрываем звук уведомления
                 if (this.audio !== null) {
                     this.audio.play()
                 }
 
+                // Добавляем подсветку зеленым цветом - success
                 panel.removeClass('panel-default')
                 panel.addClass('panel-success')
                 panel.removeClass('panel-info')
 
+                // Убираем подсветку подсветку зеленым цветом - success,
+                // и добавляем голубую подсветку - info или
+                // синию подсветку - primary, в случае, если
+                // панель не была еще открыта
                 setTimeout(function () {
                     panel.removeClass('panel-default')
                     panel.removeClass('panel-success')
-                    panel.addClass('panel-info')
+
+                    // Добавляем голубую подсветку, если панель не была открыта,
+                    // иначе синию
+                    if (this.open) panel.addClass('panel-info')
+                    else panel.addClass('panel-primary')
                 }, 5000)
-            } else if (this.count > count) {
-                panel.addClass('panel-default')
-                panel.removeClass('panel-success')
-                panel.removeClass('panel-info')
-            } else if (this.count > count) {
-                panel.removeClass('panel-default')
-                panel.removeClass('panel-success')
-                panel.addClass('panel-info')
             }
 
             this.count = count

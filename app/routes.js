@@ -1,14 +1,11 @@
 import VueRouter from 'vue-router'
 
-// let IndexPage = require('./pages/IndexPage.vue').default;
-let LandingPage = require('./pages/LandingPage.vue').default;
-let AboutPage = require('./pages/AboutPage.vue').default;
-let LoginPage = require('./pages/LoginPage.vue').default;
+import LandingPage from './pages/LandingPage'
+import LoginPage from './pages/LoginPage'
 
 let routes = [
-    { path: '/', component: LandingPage, name: 'index'},
-    { path: '/about', component: AboutPage, name: 'about'},
-    { path: '/login', component: LoginPage, name: 'login'}
+    { name: 'index', path: '/', component: LandingPage },
+    { name: 'login', path: '/login', component: LoginPage},
 ];
 
 let router = new VueRouter({

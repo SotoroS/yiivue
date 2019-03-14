@@ -29,9 +29,14 @@ Vue.use(new VueSocketIO({
 
 Vue.config.productionTip = false;
 
-new Vue({
+var app = new Vue({
+    el: '#app',
     components: {'vue-index': VueIndex},
     router,
     store,
-    render: h => h(VueIndex)
-}).$mount('#app');
+    methods: {
+        isActiveMenu(path) {
+            return window.location.pathname == path
+        }
+    }
+});

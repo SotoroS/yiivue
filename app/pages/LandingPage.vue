@@ -2,7 +2,7 @@
     <div class="site-index">
 
         <div class="jumbotron">
-            <h1>Congratulations!</h1>
+            <h1>{{answer}}</h1>
 
             <p class="lead">You have successfully created your Yii-powered application.</p>
 
@@ -58,3 +58,16 @@
         </div>
     </div>
 </template>
+
+<script>
+    export default {
+        computed: {
+            answer(){
+                return this.$store.getters.getAnswer
+            }
+        },
+        mounted() {
+            this.$socket.emit('chat_message', {name:'Урурурурур'})
+        }
+    }
+</script>

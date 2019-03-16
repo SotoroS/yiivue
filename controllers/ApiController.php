@@ -105,8 +105,10 @@ class ApiController extends Controller
 
         $model->load(Yii::$app->request->post(), '');
 
+        $transports = null;
+
         if (empty($model->filter)) {
-            $transports = Track::find()->where->orderBy(['time' => SORT_DESC])->groupBy(['user_id'])->asArray()->all();
+            $transports = Track::find()->orderBy(['time' => SORT_DESC])->groupBy(['user_id'])->asArray()->all();
         } else if ($model->filter == '15c') {
             $transports = Track::find()->orderBy(['time' => SORT_DESC])->groupBy(['user_id'])->asArray()->all();
         }
@@ -133,6 +135,30 @@ class ApiController extends Controller
                     "lat" => 48.7846935,
                     "lng" => 44.565289
                 ],
+                [
+                    "lat" => 48.7846935,
+                    "lng" => 44.565289
+                ],
+                [
+                    "lat" => 48.7846935,
+                    "lng" => 44.5651817
+                ],
+                [
+                    "lat" => 48.7845969,
+                    "lng" => 44.5650637
+                ],
+                [
+                    "lat" => 48.7847149,
+                    "lng" => 44.5647097
+                ],
+                [
+                    "lat" => 48.7842751,
+                    "lng" => 44.5640874
+                ],
+                [
+                    "lat" => 48.7856792,
+                    "lng" => 44.5618708
+                ]
             ],
             'result' => $transports];
     }
@@ -161,6 +187,30 @@ class ApiController extends Controller
                     "lat" => 48.7846935,
                     "lng" => 44.565289
                 ],
+                [
+                    "lat" => 48.7846935,
+                    "lng" => 44.565289
+                ],
+                [
+                    "lat" => 48.7846935,
+                    "lng" => 44.5651817
+                ],
+                [
+                    "lat" => 48.7845969,
+                    "lng" => 44.5650637
+                ],
+                [
+                    "lat" => 48.7847149,
+                    "lng" => 44.5647097
+                ],
+                [
+                    "lat" => 48.7842751,
+                    "lng" => 44.5640874
+                ],
+                [
+                    "lat" => 48.7856792,
+                    "lng" => 44.5618708
+                ]
             ]
         ];
 

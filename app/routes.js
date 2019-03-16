@@ -1,11 +1,11 @@
 import VueRouter from 'vue-router'
 
-import LandingPage from './pages/LandingPage'
-import LoginPage from './pages/LoginPage'
+import DriverView from './pages/DriverView'
+import UserView from './pages/UserView'
 
 let routes = [
-    { name: 'index', path: '/', component: LandingPage },
-    { name: 'login', path: '/login', component: LoginPage},
+    { name: 'driver-view', path: '/driver', component: DriverView },
+    { name: 'user-view', path: '/', component: UserView},
 ];
 
 let router = new VueRouter({

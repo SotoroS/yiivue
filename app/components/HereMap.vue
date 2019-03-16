@@ -39,6 +39,10 @@
 
             navigator.geolocation.watchPosition((position) => {
                 vh.currentPosition = position.coords
+                vh.map.setCenter({
+                    lat: vh.currentPosition.latitude,
+                    lng: vh.currentPosition.longitude,
+                })
                 vh.setCenter()
             },(error) => {
                 console.log(error)
@@ -68,10 +72,10 @@
                 this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers)
             },
             setCenter() {
-                this.map.setCenter({
-                    lat: this.currentPosition.latitude,
-                    lng: this.currentPosition.longitude,
-                })
+                // this.map.setCenter({
+                //     lat: this.currentPosition.latitude,
+                //     lng: this.currentPosition.longitude,
+                // })
                 
                 if(this.meMarker) this.map.removeObject(this.meMarker)
 
@@ -113,9 +117,17 @@
                     // console.log(data.status)
                     if(this.userType) {
                         console.log('Хочу маршрут')
+                        this.addRouteShapeToMap()
                         axios.get('/api/get-path').then(({data}) => {
                             console.log('Маршрут получен')
-                            console.log(data)
+                            console.log(data.result)
+                            data.result.forEach((el) => {
+                                this.map.addObject(new H.map.Marker({
+                                    lat: el.lat,
+                                    lng: el.lng,
+                                }));
+                            })
+
                             this.driverRoute = data.path
                         })
                     }
@@ -123,6 +135,48 @@
                     console.log(error)
                 })
 
+            },
+            addRouteShapeToMap(route){
+                var router = this.platform.getRoutingService(),
+                    routeRequestParams = {
+                    mode: 'fastest;car',
+                    representation: 'display',
+                    routeattributes : 'waypoints,summary,shape,legs',
+                    maneuverattributes: 'direction,action',
+                    waypoint0: '48.5700,44.4361', // Brandenburg Gate
+                    waypoint1: '48.7846,44.5652'  // Friedrichstraße Railway Station
+                    };
+
+
+                router.calculateRoute(
+                    routeRequestParams,
+                    this.onRouteSuccess,
+                    (error) => { console.log(error)}
+                );
+            },
+            onRouteSuccess(result) {
+                console.log(result)
+                var route = result.response.route[0];
+
+                var lineString = new H.geo.LineString(),
+                    routeShape = route.shape,
+                    polyline;
+
+                routeShape.forEach(function(point) {
+                    var parts = point.split(',');
+                    lineString.pushLatLngAlt(parts[0], parts[1]);
+                });
+
+                polyline = new H.map.Polyline(lineString, {
+                    style: {
+                    lineWidth: 4,
+                    strokeColor: 'rgba(0, 128, 255, 0.7)'
+                    }
+                });
+                // Add the polyline to the map
+                this.map.addObject(polyline);
+                // And zoom to its bounding rectangle
+                this.map.setViewBounds(polyline.getBounds(), true);
             }
         }
     }

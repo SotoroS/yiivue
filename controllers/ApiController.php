@@ -115,7 +115,7 @@ class ApiController extends Controller
 
     public function actionGetPath()
     {
-        return '{
+        return ['result' => '{
     "response": {
       "metaInfo": {
         "timestamp": "2019-03-16T12:09:55Z",
@@ -370,7 +370,7 @@ class ApiController extends Controller
       ],
       "language": "en-us"
     }
-  }';
+  }'];
     }
 
     /**
@@ -380,6 +380,6 @@ class ApiController extends Controller
      */
     public function actionCheckAuth()
     {
-        return ['status' => (Yii::$app->user->isGuest)];
+        return ['status' => !(Yii::$app->user->isGuest)];
     }
 }

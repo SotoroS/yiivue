@@ -53,6 +53,7 @@ class ApiController extends Controller
     {
         $model = new LoginForm();
         $model->load(Yii::$app->request->post(), '');
+
         if ($model->login()) {
             return ['result' => 'success', 'user_id' => Yii::$app->user->getId()];
         } else {
@@ -62,5 +63,15 @@ class ApiController extends Controller
 
     public function actionTest() {
         return ['value' => 'Hello!', 'username' => Yii::$app->user->identity->email];
+    }
+
+    public function actionGetUserInfo()
+    {
+        $user = Yii::$app->user->identity;
+
+        return [
+            'fullname' => $user->fullname,
+            'trackNumber' => $user->number_track
+        ];
     }
 }

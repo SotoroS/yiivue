@@ -21,6 +21,7 @@
                     behavior: null,
                     ui: null,
                 },
+                meMarker: null,
             }
         },
         mounted() {
@@ -71,8 +72,10 @@
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
                 })
-                // this.map.get
-                this.map.addObject(new H.map.Marker({
+                
+                if(this.meMarker) this.map.removeObject(this.meMarker)
+
+                this.meMarker = this.map.addObject(new H.map.Marker({
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
                 }));
@@ -87,14 +90,14 @@
                         console.log(data)
                     })
                 } else {
-                    console.log(this.mapCoords)
+                    // console.log(this.mapCoords)
 
                     this.mapCoords.leftUp.geoCoords = this.map.screenToGeo(this.mapCoords.leftUp.x, 
                         this.mapCoords.leftUp.y);
                     this.mapCoords.rightDown.geoCoords = this.map.screenToGeo(this.mapCoords.rightDown.x, 
                         this.mapCoords.rightDown.y);
 
-                    console.log(this.mapCoords)
+                    // console.log(this.mapCoords)
                     axios.post('/api/get-transports/', {
                         filter: this.search,
                         leftUpLat: this.mapCoords.leftUp.geoCoords.lat,
@@ -107,7 +110,7 @@
             checkAuth() {
                 axios.get('/api/check-auth').then(({data}) => {
                     this.userType = data.status
-                    console.log(data.status)
+                    // console.log(data.status)
                     if(this.userType) {
                         console.log('Хочу маршрут')
                         axios.get('/api/get-path').then(({data}) => {
@@ -116,8 +119,6 @@
                             this.driverRoute = data.path
                         })
                     }
-
-
                 }).catch((error) => {
                     console.log(error)
                 })

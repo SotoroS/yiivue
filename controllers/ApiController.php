@@ -74,7 +74,7 @@ class ApiController extends Controller
         $user = Yii::$app->user->identity;
 
         return [
-            'fullname' => $user->first_name . $user->patronymic,
+            'fullname' => $user->first_name . ' ' . $user->patronymic,
             'trackNumber' => $user->number_track
         ];
     }

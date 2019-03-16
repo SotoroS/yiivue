@@ -37,7 +37,6 @@
             this.map.setZoom(16)
 
             navigator.geolocation.watchPosition((position) => {
-                // console.log(position)
                 vh.currentPosition = position.coords
                 vh.setCenter()
             },(error) => {
@@ -72,6 +71,7 @@
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
                 })
+                // this.map.get
                 this.map.addObject(new H.map.Marker({
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
@@ -95,7 +95,7 @@
                         this.mapCoords.rightDown.y);
 
                     console.log(this.mapCoords)
-                    axios.post('/api/get-transport/', {
+                    axios.post('/api/get-transports/', {
                         filter: this.search,
                         leftUpLat: this.mapCoords.leftUp.geoCoords.lat,
                         leftUpLng: this.mapCoords.leftUp.geoCoords.lng,

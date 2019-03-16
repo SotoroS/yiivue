@@ -26,9 +26,11 @@
             if(vh.$root.sessionId) vh.userType = true
 
             vh.makeMap()
+            this.map.setZoom(16)
 
             navigator.geolocation.watchPosition((position) => {
-                this.currentPosition = position
+                console.log(position)
+                vh.currentPosition = position.coords
                 vh.setCenter()
             },(error) => {
                 console.log(error)
@@ -61,7 +63,10 @@
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
                 })
-                this.map.setZoom(7)
+                this.map.addObject(new H.map.Marker({
+                    lat: this.currentPosition.latitude,
+                    lng: this.currentPosition.longitude,
+                }));
             }
         }
     }

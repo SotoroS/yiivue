@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       typingTimer: null,
-      doneTypingInterval: 1000,
+      doneTypingInterval: 2000,
       inputText: ""
     };
   },
@@ -25,7 +25,9 @@ export default {
       this.typingTimer = setTimeout(this.postInput, this.doneTypingInterval);
     },
     postInput() {
-      if (this.inputText != "") alert(this.inputText);
+      if (this.inputText != ""){
+          this.$emit("search", this.inputText);
+      }
     }
   }
 };

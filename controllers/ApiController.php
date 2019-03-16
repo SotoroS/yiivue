@@ -110,8 +110,12 @@ class ApiController extends Controller
             $transports = Track::find()->orderBy(['data' => SORT_DESC])->groupBy(['user_id'])->asArray()->all();
         }
 
-//        return $transports;
-    return '{
+        return $transports;
+    }
+
+    public function actionGetPath()
+    {
+        return '{
     "response": {
       "metaInfo": {
         "timestamp": "2019-03-16T12:09:55Z",

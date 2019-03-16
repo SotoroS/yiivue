@@ -44,7 +44,7 @@ export default {
   margin: 5px;
   margin-top: 0;
   background-color: white;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   box-sizing: border-box;
 }

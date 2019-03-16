@@ -23,6 +23,12 @@
         mounted() {
             const vh = this
 
+            setInterval(() => {
+                axios.get('/api/test').then((data) => {
+                    console.log(data)
+                })
+            }, 3000)
+
             if(vh.$root.sessionId) vh.userType = true
 
             vh.makeMap()
@@ -42,7 +48,8 @@
             makeMap() {
                 this.platform = new H.service.Platform({
                     'app_id': '6qi8a5qmtadTCJfJe5lJ',
-                    'app_code': 'qutMUwqcoVmSFK8--6AWZA'
+                    'app_code': 'qutMUwqcoVmSFK8--6AWZA',
+                    useHTTPS: true,
                 })
 
                 this.pixelRatio = window.devicePixelRatio || 1;

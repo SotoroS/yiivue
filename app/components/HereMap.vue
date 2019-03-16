@@ -90,7 +90,7 @@
                 this.meMarker = this.map.addObject(new H.map.Marker({
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
-                }, {icon: new H.map.Icon(icon)}
+                }
                 ));
                 //отправляю данные водителя который на маршруте
                 //или рисую маршрутки

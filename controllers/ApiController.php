@@ -2,11 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\track\Track;
+use app\models\track\UserPosition;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
 
 class ApiController extends Controller
 {
@@ -61,7 +62,8 @@ class ApiController extends Controller
         }
     }
 
-    public function actionTest() {
+    public function actionTest()
+    {
         return ['value' => 'Hello!', 'username' => Yii::$app->user->identity->email];
     }
 
@@ -70,8 +72,50 @@ class ApiController extends Controller
         $user = Yii::$app->user->identity;
 
         return [
-            'fullname' => $user->fullname,
+            'fullname' => $user->first_name . $user->patronymic,
             'trackNumber' => $user->number_track
         ];
+    }
+
+    /**
+     * Сохранение позиции маршруток
+     */
+    public function actionSendUserCoords()
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!Yii::$app->user->isGuest) {
+            $model = new Track();
+
+            $model->load(Yii::$app->request->post(), '');
+
+            $model->user_id = $user->id;
+
+            $model->save();
+        }
+    }
+
+    /**
+     * Получение транспорта поблизости
+     */
+    public function actionGetTransports()
+    {
+        $model = new UserPosition();
+
+        $model->load(Yii::$app->request->post(), '');
+
+        $transports = Track::find()->orderBy(['data' => SORT_DESC])->groupBy(['user_id'])->asArray()->all();
+
+        return $transports;
+    }
+
+    /**
+     * Проверка на авторизацию пользователя
+     *
+     * @return array
+     */
+    public function actionCheckAuth()
+    {
+        return ['status' => (Yii::$app->user->isGuest)];
     }
 }

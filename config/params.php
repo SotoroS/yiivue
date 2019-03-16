@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'api_token' => '8544-2myZKuquGFSOri',
-    'sport_id' => 13,
+    'user.passwordResetTokenExpire' => 3600,
+    'supportEmail' => 'main.triple@yandex.ru',
 ];

@@ -94,6 +94,8 @@ a.desc:after {
 .nav li > form > button.logout {
     padding: 15px;
     border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 8px 0px;
 }
 
 @media(max-width:767px) {
@@ -194,4 +196,14 @@ a[data-toggle=collapse]:hover {
 .panel-default,
 .panel-success{
     transition: .5s;
+}
+
+.full-btn {
+    width: 100%;
+}
+
+.has-danger .control-label,
+.has-danger .help-block,
+.has-danger .form-control-feedback {
+    color: #d9534f;
 }

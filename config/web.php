@@ -6,6 +6,8 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
+    'language'       => 'ru-RU',
+    'sourceLanguage' => 'ru-RU',
     'bootstrap' => [
         'log',
         'queue'
@@ -32,12 +34,17 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+        'mailer'       => [
+            'class'            => 'yii\swiftmailer\Mailer',
+            'viewPath'         => '@app/mail',
+            'useFileTransport' => false,
+            'transport'        => [
+                'class'    => 'Swift_SmtpTransport',
+                'host'     => 'ssl://smtp.yandex.ru',
+                'username' => 'main.triple@yandex.ru',
+                'password' => 'axrBWsHDhNsBx3P',
+                'port'     => '465',
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

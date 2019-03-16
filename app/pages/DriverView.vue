@@ -66,6 +66,7 @@
                     rtp.style.textShadow = "0 3px 6px rgba(0,0,0,0.55)";
 
                     map.style.filter = "contrast(1)";
+                    map.style.pointerEvents = "unset";
 
                     this.routeTimeSeconds = 0;
                     this.routeTimeMinutes = 0;
@@ -86,6 +87,7 @@
                     rtp.style.textShadow = "";
 
                     map.style.filter = "contrast(0.5)";
+                    map.style.pointerEvents = "none";
 
                     clearInterval(this.routeInterval);
                 }

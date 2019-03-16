@@ -2,13 +2,13 @@
     <div id="driver-view" class="driver-view">
         <div id="driver-header">
             <p>{driverFullName}</p>
-            <p>{driverRoute}</p>
+            <p><span>{driverRoute}</span></p>
         </div>
         <div id="driver-clock">
             <p>{routeTime}</p>
         </div>
         <div id="map-filter">
-            <here-map></here-map>
+            <here-map :driverOnRoute="driverOnRoute"></here-map>
         </div>
         <div id="drive-button">
             <p>{buttonText}</p>
@@ -24,25 +24,38 @@
         components: {'here-map': HereMap},
         data(){
             return {
-                driverFirstName: "",
-                driverSecondName: "",
+                driverFullName: "",
                 driverRoute: "",
                 buttonText: "",
+                driverOnRoute: false,
                 routeTimeMinutes: 0,
                 routeTimeSeconds: 0
             }
         },
         computed: {
-            driverFullName() {
-                return this.driverFirstName + " " + this.driverSecondName;
-            },
             routeTime() {
                 return this.routeTimeMinutes + ":" + this.routeTimeSeconds;
             }
+        },
+        mounted() {
+            axios.get('/api/get-user-info').then((data)=>{
+                console.log(data);
+                this.driverFullName = data.fullname;
+                this.driverRoute = data.trackNumber;
+            });
         }
-    }
+    }/*get-user-info*/
 </script>
 
 <style>
+    #driver-header {
+        height: 50px;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        font-size: 1em;
+        font-family: 'Roboto', sans-serif;
+    }
 
+    
 </style>

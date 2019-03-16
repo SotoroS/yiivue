@@ -28,4 +28,14 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+
+    /**
+     * Displays homepage and all vue.js pages
+     *
+     * @return string
+     */
+    public function actionDriver()
+    {
+        return $this->render('driver');
+    }
 }

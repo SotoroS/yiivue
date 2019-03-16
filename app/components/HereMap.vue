@@ -23,14 +23,24 @@
         mounted() {
             const vh = this
 
+            setInterval(() => {
+                axios.get('/api/test').then((data) => {
+                    console.log(data)
+                })
+            }, 3000)
+
+            if(vh.$root.sessionId) vh.userType = true
+
+            vh.makeMap()
+            this.map.setZoom(16)
+
             navigator.geolocation.watchPosition((position) => {
-                this.currentPosition = position
+                console.log(position)
+                vh.currentPosition = position.coords
+                vh.setCenter()
             },(error) => {
                 console.log(error)
             })
-
-            vh.makeMap()
-            vh.setCenter()
 
 
         },
@@ -38,7 +48,8 @@
             makeMap() {
                 this.platform = new H.service.Platform({
                     'app_id': '6qi8a5qmtadTCJfJe5lJ',
-                    'app_code': 'qutMUwqcoVmSFK8--6AWZA'
+                    'app_code': 'qutMUwqcoVmSFK8--6AWZA',
+                    useHTTPS: true,
                 })
 
                 this.pixelRatio = window.devicePixelRatio || 1;
@@ -59,7 +70,10 @@
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
                 })
-                this.map.setZoom(7)
+                this.map.addObject(new H.map.Marker({
+                    lat: this.currentPosition.latitude,
+                    lng: this.currentPosition.longitude,
+                }));
             }
         }
     }

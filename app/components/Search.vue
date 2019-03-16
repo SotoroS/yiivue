@@ -73,12 +73,12 @@ input::placeholder {
 }
 
 img {
-    height: 29px;
-    width: 29px;
+    height: 23px;
+    width: 23px;
     position: absolute;
     z-index: 6;
     right: 10px;
-    opacity: 0.35;
+    opacity: 0.55;
 }
 </style>
 

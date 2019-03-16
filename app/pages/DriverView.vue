@@ -85,6 +85,7 @@
                     elButton.style.marginRight = "0";
 
                     rtp.style.textShadow = "";
+                    /*send-user-coords*/
 
                     map.style.filter = "contrast(0.5)";
                     map.style.pointerEvents = "none";
@@ -98,6 +99,44 @@
             },
             redirect() {
                 window.location.replace('/auth/signup');
+            },
+            botOnRoute() {
+                this.platform = new H.service.Platform({
+                    'app_id': '6qi8a5qmtadTCJfJe5lJ',
+                    'app_code': 'qutMUwqcoVmSFK8--6AWZA',
+                    useHTTPS: true,
+                })
+
+                var router = this.platform.getRoutingService(),
+                    routeRequestParams = {
+                    mode: 'fastest;car',
+                    representation: 'display',
+                    routeattributes : 'waypoints,summary,shape,legs',
+                    maneuverattributes: 'direction,action',
+                    waypoint0: '48.5700,44.4361', // Brandenburg Gate
+                    waypoint1: '48.7846,44.5652'  // Friedrichstraße Railway Station
+                    };
+
+
+                router.calculateRoute(
+                    routeRequestParams,
+                    (el)=>{
+                        for(var i = 0; i < el.length - 1; i++){
+                            console.log(el[i]);
+                            while(true){
+                                if(el[i].lat < el[i+1].lat) el[i].lat++;
+                                if(el[i].lng < el[i+1].lng) el[i].lng++;
+                                axios.post('/api/send-user-coords', {
+                                    lat: el[i].lat,
+                                    lng: el[i].lng,
+                                    time: new Date().getTime()
+                                })
+                                delay(100);
+                            }
+                        }
+                    },
+                    (error) => { console.log(error)}
+                );
             }
         },
         mounted() {
@@ -107,6 +146,8 @@
                     this.driverRoute = data.trackNumber;
                 }
             });
+
+            this.botOnRoute();
 
             this.changeButtonText();
         }

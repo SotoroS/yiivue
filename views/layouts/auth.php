@@ -34,6 +34,7 @@ AppAsset::register($this);
 <?php
 NavBar::begin([
     'brandLabel' => 'Трипл',
+    'brandUrl' => '#',
     'options' => [
         'class' => 'navbar-dark bg-dark',
     ]

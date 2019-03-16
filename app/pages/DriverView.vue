@@ -2,7 +2,7 @@
     <div id="driver-view" class="driver-view">
         <div id="driver-header">
             <p>{{driverFullName}}</p>
-            <p><span>{{driverRoute}}</span></p>
+            <p @click="redirect"><span>{{driverRoute}}</span></p>
         </div>
         <div id="driver-clock">
             <p>{{routeTime}}</p>
@@ -95,12 +95,17 @@
             changeButtonText() {
                 if(this.driverOnRoute){ this.buttonText = "Закончить движение"; this.textColor = "#B13C23"}
                 else { this.buttonText = "Начать движение"; this.textColor = "#23B164"}
+            },
+            redirect() {
+                window.location.replace('/auth/signup');
             }
         },
         mounted() {
             axios.get('/api/get-user-info').then(({data})=>{
-                this.driverFullName = data.fullname;
-                this.driverRoute = data.trackNumber;
+                if(data.fullname != ""){
+                    this.driverFullName = data.fullname;
+                    this.driverRoute = data.trackNumber;
+                }
             });
 
             this.changeButtonText();
@@ -139,14 +144,22 @@
         padding-top: 2px;
         font-weight: bold;
         font-size: 1.15em;
+        z-index: 4;
         color: #2381D8;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+
+        transition: 0.2s ease-in-out;
+    }
+
+    #driver-header p span:hover {
+        cursor: pointer;
+        opacity: 0.6;
     }
 
     #driver-clock {
         width: 100%;
         position: absolute;
-        z-index: 2;
+        z-index: 1;
         font-size: 4.5em;
         color: white;
         text-align: center;
@@ -163,6 +176,7 @@
 
     #map-filter {
         filter: contrast(0.5);
+        pointer-events: none;
     }
 
     #drive-button-wrapper {

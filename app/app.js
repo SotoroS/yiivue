@@ -3,29 +3,20 @@ import VueJquery from 'vue-jquery'
 import VueRouter from 'vue-router'
 import router from './routes.js'
 import store from './store'
-import VueSocketIO from 'vue-socket.io'
-import Buefy from 'buefy'
+import BootstrapVue from 'bootstrap-vue'
 import VueCookies from 'vue-cookies'
 import AsyncComputed from 'vue-async-computed'
 
 import VueIndex from './VueIndex'
 
 import './bootstrap'
-import 'buefy/dist/buefy.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(VueRouter);
 Vue.use(AsyncComputed)
 Vue.use(VueCookies)
 Vue.use(VueJquery)
-Vue.use(Buefy)
-Vue.use(new VueSocketIO({
-    debug: true,
-    connection: 'http://localhost:1228',
-    vuex: {
-        store,
-        actionPrefix: 'socket_',
-    }
-}))
+Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false;
 

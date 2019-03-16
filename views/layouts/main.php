@@ -27,18 +27,16 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap" id="app">
-    <div v-if="this.$route.matched.length">
-        <vue-index></vue-index>
-    </div>
+    <div class="container">
+        <div v-if="this.$route.matched.length">
+            <vue-index></vue-index>
+        </div>
 
-
-    <div class="yii" v-else>
-        <?= $content ?>
+        <div class="yii" v-else>
+            <?= $content ?>
+        </div>
     </div>
-    
 </div>
-
-
 
 <?php $this->endBody() ?>
 </body>

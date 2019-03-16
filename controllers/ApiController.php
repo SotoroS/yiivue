@@ -44,7 +44,6 @@ class ApiController extends Controller
         return $result;
     }
 
-
     /**
      * Login action.
      *
@@ -59,5 +58,9 @@ class ApiController extends Controller
         } else {
             return ['result' => 'error', 'messages' => $model->getFirstErrors()];
         }
+    }
+
+    public function actionTest() {
+        return ['value' => 'Hello!'];
     }
 }

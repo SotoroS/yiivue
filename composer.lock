@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aff61172b4d9bb4332aedfb1452c8126",
+    "content-hash": "568a039fe1bede4ac5b46066d21c9565",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -605,16 +605,16 @@
         },
         {
             "name": "kartik-v/yii2-grid",
-            "version": "v3.2.9",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "3735c999eda391961220845063f8b373f409f488"
+                "reference": "93fbed5d0ad6e3e0879d82d404441532a68b13a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/3735c999eda391961220845063f8b373f409f488",
-                "reference": "3735c999eda391961220845063f8b373f409f488",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/93fbed5d0ad6e3e0879d82d404441532a68b13a7",
+                "reference": "93fbed5d0ad6e3e0879d82d404441532a68b13a7",
                 "shasum": ""
             },
             "require": {
@@ -626,7 +626,7 @@
             "type": "yii2-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2.x-dev"
+                    "dev-master": "3.3.x-dev"
                 }
             },
             "autoload": {
@@ -653,7 +653,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2018-12-07T12:28:30+00:00"
+            "time": "2019-03-13T07:03:37+00:00"
         },
         {
             "name": "kartik-v/yii2-krajee-base",
@@ -5108,7 +5108,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "kartik-v/yii2-grid": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -106,10 +106,35 @@ class ApiController extends Controller
         $model->load(Yii::$app->request->post(), '');
 
         if (empty($model->filter)) {
+            $transports = Track::find()->where->orderBy(['time' => SORT_DESC])->groupBy(['user_id'])->asArray()->all();
+        } else if ($model->filter == '15c') {
             $transports = Track::find()->orderBy(['time' => SORT_DESC])->groupBy(['user_id'])->asArray()->all();
         }
 
-        return ['result' => $transports];
+        return [
+            'path' => [
+                [
+                    "lat" => 48.5700095,
+                    "lng" => 44.4361353
+                ],
+                [
+                    "lat" => 48.5706317,
+                    "lng" => 44.4332278
+                ],
+                [
+                    "lat" => 48.5687542,
+                    "lng" => 44.431994
+                ],
+                [
+                    "lat" => 48.6136115,
+                    "lng" => 44.4227672
+                ],
+                [
+                    "lat" => 48.7846935,
+                    "lng" => 44.565289
+                ],
+            ],
+            'result' => $transports];
     }
 
     public function actionGetPath()

@@ -24,7 +24,8 @@
         "yiicod/yii2-socketio": "^1.2",
         "workerman/phpsocket.io": "^1.1",
         "yiisoft/yii2-bootstrap4": "^2.0",
-        "cboden/ratchet": "^0.4.1"
+        "cboden/ratchet": "^0.4.1",
+        "kartik-v/yii2-grid": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "~2.0.0",

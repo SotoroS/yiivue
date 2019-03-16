@@ -23,14 +23,16 @@
         mounted() {
             const vh = this
 
+            if(vh.$root.sessionId) vh.userType = true
+
+            vh.makeMap()
+
             navigator.geolocation.watchPosition((position) => {
                 this.currentPosition = position
+                vh.setCenter()
             },(error) => {
                 console.log(error)
             })
-
-            vh.makeMap()
-            vh.setCenter()
 
 
         },

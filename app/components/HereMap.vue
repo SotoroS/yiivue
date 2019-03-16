@@ -107,8 +107,9 @@
             checkAuth() {
                 axios.get('/api/check-auth').then(({data}) => {
                     this.userType = data.status
-
+                    console.log(data.status)
                     if(this.userType) {
+                        console.log('Хочу маршрут')
                         axios.get('/api/get-path').then(({data}) => {
                             console.log('Маршрут получен')
                             console.log(data)

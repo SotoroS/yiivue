@@ -5,13 +5,23 @@
 <script>
     export default {
         name: 'here-map',
+        data() {
+            return {
+                currentPosition: null,
+            }
+        },
         mounted() {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    alert('Последний раз вас засекали здесь: ' +
-                        position.coords.latitude + ", " + position.coords.longitude);
-                }
-            );
+            const vh = this
+
+            setInterval(() => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                            vh.currentPosition = position.coords
+                    }
+                )
+            })
+
+            
+
         },
     }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div id="user-view" class="user-view">
-        <here-map></here-map>
-        <search></search> 
+        <here-map :search="searchStr"></here-map>
+        <search @search="search"></search> 
     </div>
 </template>
 
@@ -11,7 +11,17 @@
 
     export default {
         name: 'user-view',
-        components: {'here-map': HereMap, 'search': Search}
+        components: {'here-map': HereMap, 'search': Search},
+        data() {
+            return {
+                searchStr: ""
+            }
+        },
+        methods: {
+            search(o) {
+                this.searchStr = o
+            }
+        }
     }
 </script>
 

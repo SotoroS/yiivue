@@ -7,11 +7,13 @@
 <script>
     export default {
         name: 'here-map',
-        props: ['driverOnRoute'],
+        props: ['driverOnRoute', 'search'],
         data() {
             return {
                 currentPosition: null,
                 userType: false, //false - user, true - driver
+                driverRoute: null,
+                mapCoords: {},
                 map: {
                     pixelRatio: null,
                     defaultLayers: null, 
@@ -23,6 +25,9 @@
         },
         mounted() {
             const vh = this
+
+            vh.mapCoords.leftUp = {x: 0, y: 0}
+            vh.mapCoords.rightDown = {x: document.body.clientWidth, y: document.body.clientHeight}
 
             this.checkAuth() //проверяет водитель или нет
 
@@ -72,6 +77,7 @@
                     lng: this.currentPosition.longitude,
                 }));
                 //отправляю данные водителя который на маршруте
+                //или рисую маршрутки
                 if(this.driverOnRoute && this.userType) {
                         axios.post('/api/send-user-coords', {
                         lat: this.currentPosition.latitude,
@@ -80,15 +86,40 @@
                     }).then(({data}) => {
                         console.log(data)
                     })
+                } else {
+                    console.log(this.mapCoords)
+
+                    this.mapCoords.leftUp.geoCoords = this.map.screenToGeo(this.mapCoords.leftUp.x, 
+                        this.mapCoords.leftUp.y);
+                    this.mapCoords.rightDown.geoCoords = this.map.screenToGeo(this.mapCoords.rightDown.x, 
+                        this.mapCoords.rightDown.y);
+
+                    console.log(this.mapCoords)
+                    axios.post('/api/get-transport/', {
+                        filter: this.search,
+                        leftUpLat: this.mapCoords.leftUp.geoCoords.lat,
+                        leftUpLng: this.mapCoords.leftUp.geoCoords.lng,
+                        rightDownLat: this.mapCoords.rightDown.geoCoords.lat,
+                        rightDownLNG: this.mapCoords.rightDown.geoCoords.lng,
+                    })
                 }
             },
             checkAuth() {
                 axios.get('/api/check-auth').then(({data}) => {
                     this.userType = data.status
-                    console.log('Usertype', data)
+
+                    if(this.userType) {
+                        axios.get('/api/get-path').then(({data}) => {
+                            console.log('Маршрут получен')
+                            this.driverRoute = data.path
+                        })
+                    }
+
+
                 }).catch((error) => {
                     console.log(error)
                 })
+
             }
         }
     }

@@ -38,8 +38,7 @@
             }
         },
         mounted() {
-            axios.get('/api/get-user-info').then((data)=>{
-                console.log(data);
+            axios.get('/api/get-user-info').then(({data})=>{
                 this.driverFullName = data.fullname;
                 this.driverRoute = data.trackNumber;
             });
@@ -55,6 +54,7 @@
         top: 0;
         font-size: 1em;
         font-family: 'Roboto', sans-serif;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
     }
 
     

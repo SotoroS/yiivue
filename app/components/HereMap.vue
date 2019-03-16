@@ -23,11 +23,11 @@
         mounted() {
             const vh = this
 
-            /*setInterval(() => {
+            setInterval(() => {
                 axios.get('/api/test').then((data) => {
                     console.log(data)
                 })
-            }, 3000)*/
+            }, 3000)
 
             if(vh.$root.sessionId) vh.userType = true
 

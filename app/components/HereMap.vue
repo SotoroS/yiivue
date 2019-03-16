@@ -7,6 +7,7 @@
 <script>
     export default {
         name: 'here-map',
+        props: ['driverOnRoute'],
         data() {
             return {
                 currentPosition: null,
@@ -22,6 +23,8 @@
         },
         mounted() {
             const vh = this
+
+            this.checkAuth() //проверяет водитель или нет
 
             setInterval(() => {
                 axios.get('/api/test').then((data) => {
@@ -74,6 +77,24 @@
                     lat: this.currentPosition.latitude,
                     lng: this.currentPosition.longitude,
                 }));
+                //отправляю данные водителя который на маршруте
+                if(this.driverOnRoute) {
+                        axios.post('/api/send-user-coords', {
+                        lat: this.currentPosition.latitude,
+                        lng: this.currentPosition.longitude,
+                        time: new Date().getTime()
+                    }).then(({data}) => {
+                        console.log(data)
+                    })
+                }
+            },
+            checkAuth() {
+                axios.get('/api/check-auth').then(({data}) => {
+                    this.userType = data.status
+                    console.log('Usertype', data)
+                }).catch((error) => {
+                    console.log(error)
+                })
             }
         }
     }

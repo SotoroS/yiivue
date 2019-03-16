@@ -1,16 +1,23 @@
 <template>
     <div id="search-container">
         <input type="text" placeholder="Найти транспорт, улицу..."
-            v-model.lazy="">
+            >
         <img >
     </div>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            typingTimer: null,
+            doneTypingInterval: 5000
+        }
+    },
     methods: {
         postInput() {
-            
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(doneTypingInterval, typingTimer);
         }
     }
 }

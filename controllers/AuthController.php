@@ -71,12 +71,12 @@ class AuthController extends Controller
         $this->layout = 'auth';
 
         if (!Yii::$app->user->isGuest) {
-            return $this->redirect(['/site/driver']);
+            return $this->redirect(['/driver']);
         }
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(['/site/driver']);
+            return $this->redirect(['/driver']);
         }
 
         $model->password = '';

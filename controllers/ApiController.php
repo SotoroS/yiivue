@@ -61,6 +61,6 @@ class ApiController extends Controller
     }
 
     public function actionTest() {
-        return ['value' => 'Hello!'];
+        return ['value' => 'Hello!', 'username' => Yii::$app->user->identity->email];
     }
 }

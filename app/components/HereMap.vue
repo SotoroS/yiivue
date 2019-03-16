@@ -111,6 +111,7 @@
                     if(this.userType) {
                         axios.get('/api/get-path').then(({data}) => {
                             console.log('Маршрут получен')
+                            console.log(data)
                             this.driverRoute = data.path
                         })
                     }

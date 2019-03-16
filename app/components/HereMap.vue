@@ -1,17 +1,34 @@
 <template>
-    <div id="here-map">sadasd</div>
+    <div id="here-map"></div>
 </template>
 
 <script>
     export default {
         name: 'here-map',
+        data() {
+            return {
+                currentPosition: null,
+            }
+        },
         mounted() {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    alert('Последний раз вас засекали здесь: ' +
-                        position.coords.latitude + ", " + position.coords.longitude);
-                }
-            );
+            const vh = this
+
+            setInterval(() => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                            vh.currentPosition = position.coords
+                    }
+                )
+            })
+
+            var platform = new H.service.Platform({
+                'app_id': '6qi8a5qmtadTCJfJe5lJ',
+                'app_code': 'qutMUwqcoVmSFK8--6AWZA'
+            });
+
+            
+
+
+
         },
     }
 </script>

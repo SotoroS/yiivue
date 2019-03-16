@@ -26,19 +26,13 @@
 
             this.checkAuth() //проверяет водитель или нет
 
-            setInterval(() => {
-                axios.get('/api/test').then((data) => {
-                    console.log(data)
-                })
-            }, 3000)
-
             if(vh.$root.sessionId) vh.userType = true
 
             vh.makeMap()
             this.map.setZoom(16)
 
             navigator.geolocation.watchPosition((position) => {
-                console.log(position)
+                // console.log(position)
                 vh.currentPosition = position.coords
                 vh.setCenter()
             },(error) => {
@@ -78,7 +72,7 @@
                     lng: this.currentPosition.longitude,
                 }));
                 //отправляю данные водителя который на маршруте
-                if(this.driverOnRoute) {
+                if(this.driverOnRoute && this.userType) {
                         axios.post('/api/send-user-coords', {
                         lat: this.currentPosition.latitude,
                         lng: this.currentPosition.longitude,

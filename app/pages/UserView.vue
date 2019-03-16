@@ -16,5 +16,7 @@
 </script>
 
 <style>
-
+    .user-view {
+        overflow: hidden;
+    }
 </style>

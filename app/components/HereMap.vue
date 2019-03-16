@@ -10,6 +10,7 @@
         data() {
             return {
                 currentPosition: null,
+                userType: false, //false - user, true - driver
                 map: {
                     pixelRatio: null,
                     defaultLayers: null, 
@@ -22,19 +23,14 @@
         mounted() {
             const vh = this
 
-            setInterval(() => {
-                navigator.geolocation.getCurrentPosition((position) => {
-                            vh.currentPosition = position.coords
-                    }
-                )
-            }, 500)
+            navigator.geolocation.watchPosition((position) => {
+                this.currentPosition = position
+            },(error) => {
+                console.log(error)
+            })
 
             vh.makeMap()
-
-
-
-
-
+            vh.setCenter()
 
 
         },
@@ -57,6 +53,13 @@
                 this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map))
 
                 this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers)
+            },
+            setCenter() {
+                this.map.setCenter({
+                    lat: this.currentPosition.latitude,
+                    lng: this.currentPosition.longitude,
+                })
+                this.map.setZoom(7)
             }
         }
     }
